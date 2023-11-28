@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const createError = require("http-errors");
+const { errorResponse } = require("./services/response");
+const seedRouter = require("./routes/seed.routes");
+const userRouter = require("./routes/user.routes");
 const app = express();
 
 require("./config/db");
@@ -9,9 +12,12 @@ app.use(cors({ credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.status(200).send("server home route");
-});
+app.use("/api/user", userRouter);
+app.use("/api/seed", seedRouter); // Seed api has been used for development purposes
+
+// app.get("/", (req, res) => {
+//   res.status(200).send("server home route");
+// });
 
 // client error handling
 app.use((req, res, next) => {
