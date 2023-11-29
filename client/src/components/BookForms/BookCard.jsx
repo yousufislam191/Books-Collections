@@ -1,8 +1,12 @@
 import React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import {
+  Card,
+  Box,
+  Grid,
+  CardContent,
+  Typography,
+  Button,
+} from "@mui/material";
 
 const BookCard = ({ book, onCardClick }) => {
   return (
@@ -17,9 +21,22 @@ const BookCard = ({ book, onCardClick }) => {
         <Typography variant="body2">
           Publication Date: {book.publicationDate}
         </Typography>
-        <Button variant="outlined" color="primary">
-          View Details
-        </Button>
+        <Grid style={{ display: "flex", justifyContent: "space-between" }}>
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginTop: "1rem" }}
+          >
+            View Details
+          </Button>
+          <Button
+            variant="outlined"
+            color="error"
+            style={{ marginTop: "1rem" }}
+          >
+            Delete
+          </Button>
+        </Grid>
       </CardContent>
     </Card>
   );

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Grid from "@mui/material/Grid";
-import { Container, Button, Typography } from "@mui/material";
+import { Container, Button, Typography, Pagination } from "@mui/material";
 import BookForm from "./BookForms/BookForm";
 import BookCard from "./BookForms/BookCard";
 import apiHostName from "../helper/apiConfig";
@@ -9,15 +9,24 @@ import apiHostName from "../helper/apiConfig";
 const BookList = () => {
   const [loading, setLoading] = useState(true);
   const [books, setBooks] = useState([]);
+  const [pagination, setPagination] = useState({
+    totalPages: 1,
+    currentPage: 1,
+    previousPage: null,
+    nextPage: null,
+  });
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const res = await axios.get(`${apiHostName}/book`);
+        const res = await axios.get(
+          `${apiHostName}/book?page=${pagination.currentPage}`
+        );
         if (res.data.success === true) {
           //   console.log(res.data.payload.books);
           setLoading(true);
           setBooks(res.data.payload.books);
+          setPagination(res.data.payload.pagination);
         }
       } catch (error) {
         console.error("Error fetching books:", error);
@@ -25,7 +34,14 @@ const BookList = () => {
     };
 
     fetchBooks();
-  }, []);
+  }, [pagination.currentPage]);
+
+  const handlePageChange = (event, page) => {
+    setPagination({
+      ...pagination,
+      currentPage: page,
+    });
+  };
 
   const handleCardClick = (bookId) => {
     // Implement view details functionality
@@ -39,12 +55,14 @@ const BookList = () => {
 
   return (
     <Container>
+      <BookForm onSubmit={handleBookSubmit} />
       <Grid
         spacing={2}
         style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: "1.5rem",
         }}
       >
         <Typography
@@ -53,9 +71,6 @@ const BookList = () => {
         >
           Book List
         </Typography>
-        <Button variant="contained" color="primary" type="submit">
-          Add New Book
-        </Button>
       </Grid>
       <Grid container spacing={2}>
         {books.map((book) => (
@@ -64,8 +79,15 @@ const BookList = () => {
           </Grid>
         ))}
       </Grid>
-
-      <BookForm onSubmit={handleBookSubmit} />
+      <Grid container justifyContent="center" mt={3}>
+        <Pagination
+          count={pagination.totalPages}
+          page={pagination.currentPage}
+          onChange={handlePageChange}
+          color="primary"
+          size="large"
+        />
+      </Grid>
     </Container>
   );
 };
