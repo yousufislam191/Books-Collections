@@ -8,7 +8,7 @@ import {
   Button,
 } from "@mui/material";
 
-const BookCard = ({ book, onCardClick }) => {
+const BookCard = ({ book, onCardClick, onDelete }) => {
   return (
     <Card
       style={{ margin: "10px", cursor: "pointer" }}
@@ -33,6 +33,7 @@ const BookCard = ({ book, onCardClick }) => {
             variant="outlined"
             color="error"
             style={{ marginTop: "1rem" }}
+            onClick={() => onDelete(book._id)}
           >
             Delete
           </Button>

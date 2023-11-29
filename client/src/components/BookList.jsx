@@ -53,6 +53,23 @@ const BookList = () => {
     console.log("Book submitted:", bookData);
   };
 
+  const handleDeleteBook = async (bookId) => {
+    console.log("object deleted id:", bookId);
+    try {
+      const response = await axios.delete(`${apiHostName}/book/${bookId}`);
+      if (response.data.success === true) {
+        // Remove the deleted book from the state
+        setBooks((prevBooks) =>
+          prevBooks.filter((book) => book._id !== bookId)
+        );
+      } else {
+        console.error("Failed to delete book");
+      }
+    } catch (error) {
+      console.error("Error deleting book:", error);
+    }
+  };
+
   return (
     <Container>
       <BookForm onSubmit={handleBookSubmit} />
@@ -75,10 +92,15 @@ const BookList = () => {
       <Grid container spacing={2}>
         {books.map((book) => (
           <Grid item key={book._id} xs={12} sm={6} md={4}>
-            <BookCard book={book} onCardClick={handleCardClick} />
+            <BookCard
+              book={book}
+              onCardClick={handleCardClick}
+              onDelete={handleDeleteBook}
+            />
           </Grid>
         ))}
       </Grid>
+
       <Grid container justifyContent="center" mt={3}>
         <Pagination
           count={pagination.totalPages}
