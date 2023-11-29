@@ -5,11 +5,12 @@ const { errorResponse } = require("./services/response");
 const seedRouter = require("./routes/seed.routes");
 const userRouter = require("./routes/user.routes");
 const bookRouter = require("./routes/book.routes");
+const { corsOrigin } = require("./secret");
 const app = express();
 
 require("./config/db");
 
-app.use(cors({ credentials: true }));
+app.use(cors({ credentials: true, origin: corsOrigin }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
