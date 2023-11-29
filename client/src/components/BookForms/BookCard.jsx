@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  Box,
-  Grid,
-  CardContent,
-  Typography,
-  Button,
-} from "@mui/material";
+import { Card, Grid, CardContent, Typography, Button } from "@mui/material";
 
 const BookCard = ({ book, onCardClick, onDelete }) => {
   return (
