@@ -4,6 +4,7 @@ const createError = require("http-errors");
 const { errorResponse } = require("./services/response");
 const seedRouter = require("./routes/seed.routes");
 const userRouter = require("./routes/user.routes");
+const bookRouter = require("./routes/book.routes");
 const app = express();
 
 require("./config/db");
@@ -13,6 +14,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use("/api/user", userRouter);
+app.use("/api/book", bookRouter);
 app.use("/api/seed", seedRouter); // Seed api has been used for development purposes
 
 // app.get("/", (req, res) => {

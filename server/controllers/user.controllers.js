@@ -15,7 +15,7 @@ const createNewUser = async (req, res, next) => {
       email,
       password,
     });
-    newUser.save();
+    await newUser.save();
 
     return successResponse(res, {
       statusCode: 201,

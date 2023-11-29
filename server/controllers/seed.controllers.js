@@ -1,5 +1,6 @@
-const { userData } = require("../dummyData");
+const { userData, bookData } = require("../dummyData");
 const User = require("../models/users.model");
+const Book = require("../models/books.model");
 
 const seedUser = async (req, res, next) => {
   try {
@@ -16,4 +17,19 @@ const seedUser = async (req, res, next) => {
   }
 };
 
-module.exports = { seedUser };
+const seedBook = async (req, res, next) => {
+  try {
+    // deleting all existing users
+    await Book.deleteMany({});
+
+    // inserting new users
+    const newbook = await Book.insertMany(bookData.books);
+
+    // successfull response
+    return res.status(201).json(newbook);
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { seedUser, seedBook };
