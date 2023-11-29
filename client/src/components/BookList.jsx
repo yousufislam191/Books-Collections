@@ -16,23 +16,23 @@ const BookList = () => {
     nextPage: null,
   });
 
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const res = await axios.get(
-          `${apiHostName}/book?page=${pagination.currentPage}`
-        );
-        if (res.data.success === true) {
-          //   console.log(res.data.payload.books);
-          setLoading(true);
-          setBooks(res.data.payload.books);
-          setPagination(res.data.payload.pagination);
-        }
-      } catch (error) {
-        console.error("Error fetching books:", error);
+  const fetchBooks = async () => {
+    try {
+      const res = await axios.get(
+        `${apiHostName}/book?page=${pagination.currentPage}`
+      );
+      if (res.data.success === true) {
+        //   console.log(res.data.payload.books);
+        setLoading(true);
+        setBooks(res.data.payload.books);
+        setPagination(res.data.payload.pagination);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchBooks();
   }, [pagination.currentPage]);
 
@@ -48,13 +48,11 @@ const BookList = () => {
     console.log("View details for book with ID:", bookId);
   };
 
-  const handleBookSubmit = (bookData) => {
-    // Implement adding book functionality
-    console.log("Book submitted:", bookData);
+  const handleBookSubmit = () => {
+    fetchBooks();
   };
 
   const handleDeleteBook = async (bookId) => {
-    console.log("object deleted id:", bookId);
     try {
       const response = await axios.delete(`${apiHostName}/book/${bookId}`);
       if (response.data.success === true) {

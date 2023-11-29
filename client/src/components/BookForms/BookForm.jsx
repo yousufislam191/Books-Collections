@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import { TextField, Button, Grid, Box, FormHelperText } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import axios from "axios";
+import apiHostName from "../../helper/apiConfig";
 
 const BookForm = ({ onSubmit }) => {
   const formik = useFormik({
@@ -28,15 +30,31 @@ const BookForm = ({ onSubmit }) => {
         .min(3, "Title must be at least 3 characters"),
       publicationDate: Yup.date()
         .required("Publication date is required")
-        .min(new Date(), "Publication date must be a future date")
         .test("isValidDate", "Invalid Publication date format", (value) => {
           return !isNaN(value);
         }),
     }),
-    onSubmit: (values) => {
-      // Implement adding book functionality
-      //   onSubmit(values);
-      console.log(values);
+    onSubmit: async (values) => {
+      //   console.log(values);
+      try {
+        const response = await axios.post(`${apiHostName}/book`, {
+          title: values.title,
+          author: values.author,
+          genre: values.genre,
+          publicationDate: values.publicationDate,
+        });
+
+        if (response.data.success === true) {
+          // Call the parent onSubmit callback to handle additional actions
+          onSubmit();
+          formik.resetForm();
+          console.log(response.data);
+        } else {
+          console.error("Failed to add book");
+        }
+      } catch (error) {
+        console.error("Error adding book:", error);
+      }
     },
   });
 
@@ -54,7 +72,6 @@ const BookForm = ({ onSubmit }) => {
             id="title"
             name="title"
             label="Title"
-            fullWidth
             value={formik.values.title}
             onChange={formik.handleChange}
             error={formik.touched.title && Boolean(formik.errors.title)}
@@ -65,15 +82,14 @@ const BookForm = ({ onSubmit }) => {
             id="author"
             name="author"
             label="Author"
-            fullWidth
             value={formik.values.author}
             onChange={formik.handleChange}
             error={formik.touched.author && Boolean(formik.errors.author)}
             helperText={formik.touched.author && formik.errors.author}
           />
-        </Grid>
+          {/* </Grid>
 
-        <Grid style={{ display: "flex", gap: "1rem" }}>
+        <Grid style={{ display: "flex", gap: "1rem" }}> */}
           <TextField
             id="genre"
             name="genre"
@@ -84,22 +100,6 @@ const BookForm = ({ onSubmit }) => {
             helperText={formik.touched.genre && formik.errors.genre}
           />
 
-          {/* <TextField
-            id="publicationDate"
-            name="publicationDate"
-            label="Publication Date"
-            type="date"
-            fullWidth
-            value={formik.values.publicationDate}
-            onChange={formik.handleChange}
-            error={
-              formik.touched.publicationDate &&
-              Boolean(formik.errors.publicationDate)
-            }
-            helperText={
-              formik.touched.publicationDate && formik.errors.publicationDate
-            }
-          /> */}
           <Box
             sx={{
               display: "flex",
